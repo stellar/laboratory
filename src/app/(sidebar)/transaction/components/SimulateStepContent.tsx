@@ -25,11 +25,12 @@ import { XdrPicker } from "@/components/FormElements/XdrPicker";
 import { Box } from "@/components/layout/Box";
 import { PageCard } from "@/components/layout/PageCard";
 import { CodeEditor } from "@/components/CodeEditor";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { XdrFormat } from "@/components/XdrFormat";
 import { SdsLink } from "@/components/SdsLink";
 import { ExpandBox } from "@/components/ExpandBox";
 import { SorobanAuthSigningCard } from "@/components/SorobanAuthSigning";
+
+import { TransactionStepHeader } from "./TransactionStepHeader";
 import { TransactionStepName } from "@/components/TransactionStepper";
 
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
@@ -94,6 +95,8 @@ type SimulateStepContentProps = {
   highestCompletedStep: TransactionStepName | null;
   simulate: SimulateStepSimulateState;
   actions: SimulateStepActions;
+  /** Callback for resetting the entire transaction flow ("Start over"). */
+  onClearAll: () => void;
 };
 
 /**
@@ -123,6 +126,7 @@ export const SimulateStepContent = ({
   highestCompletedStep,
   simulate,
   actions,
+  onClearAll,
 }: SimulateStepContentProps) => {
   const { network } = useStore();
 
@@ -358,7 +362,11 @@ export const SimulateStepContent = ({
 
   return (
     <Box gap="md">
-      <PageHeader heading="Simulate transaction" as="h1" />
+      <TransactionStepHeader
+        heading="Simulate transaction"
+        xdr={xdrToSimulate}
+        onClearAll={onClearAll}
+      />
       <PageCard>
         {!network.rpcUrl ? (
           <Notification variant="warning" title="Attention">

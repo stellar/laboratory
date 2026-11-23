@@ -439,7 +439,7 @@ export const SignTransactionXdr = ({
           const { signature: trezorSig, error } = await txHelper.signWithTrezor(
             {
               bipPath: path,
-              transaction: txToSign as Transaction,
+              transaction: txToSign,
             },
           );
 
@@ -804,11 +804,6 @@ export const SignTransactionXdr = ({
               }}
               error={bipPathErrorMsg}
               value={bipPath}
-              note={
-                selectedHardware === "trezor"
-                  ? "Note: Trezor devices require upper time bounds to be set (non-zero), otherwise the signature will not be verified"
-                  : undefined
-              }
               rightElement={
                 <>
                   <div className="InputSideElement InputSideElement--right SignTx__hardwareDropdown">
@@ -827,6 +822,10 @@ export const SignTransactionXdr = ({
                         }
 
                         setSelectedHardware(event.target.value);
+
+                        if (event.target.value === "trezor") {
+                          txHelper.prepareTrezor();
+                        }
                       }}
                     >
                       <option value="">Select a wallet</option>

@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge, Card, Text } from "@stellar/design-system";
-import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
+import ReactDiffViewer, { DiffMethod } from "react-diff-viewer-continued";
 import { stringify } from "lossless-json";
 
 import { TransactionTabEmptyMessage } from "@/components/TransactionTabEmptyMessage";

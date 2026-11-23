@@ -67,56 +67,56 @@ export const MAINNET_LIMITS: NetworkLimits = {
   "contract_data_entry_size_bytes": 65536,
   "contract_max_size_bytes": 131072,
   "ledger_max_instructions": 580000000,
-  "ledger_max_disk_read_entries": 1000,
+  "ledger_max_disk_read_entries": 2000,
   "ledger_max_disk_read_bytes": 400000,
-  "ledger_max_write_ledger_entries": 1000,
-  "ledger_max_write_bytes": 286720,
-  "ledger_max_txs_size_bytes": 266240,
-  "ledger_max_dependent_tx_clusters": 2,
+  "ledger_max_write_ledger_entries": 2000,
+  "ledger_max_write_bytes": 297000,
+  "ledger_max_txs_size_bytes": 864000,
+  "ledger_max_dependent_tx_clusters": 3,
   "max_entry_ttl": 3110400,
   "min_temporary_ttl": 17280,
   "min_persistent_ttl": 2073600,
-  "fee_rate_per_instructions_increment": 7,
-  "fee_read_ledger_entry": "1563",
-  "fee_write_ledger_entry": "2500",
-  "fee_read_1kb": "447",
-  "fee_write_1kb": "875",
-  "fee_tx_size_1kb": "406",
-  "fee_historical_1kb": "4059",
-  "fee_contract_events_1kb": "5000",
+  "fee_rate_per_instructions_increment": 3,
+  "fee_read_ledger_entry": "781",
+  "fee_write_ledger_entry": "1250",
+  "fee_read_1kb": "223",
+  "fee_write_1kb": "437",
+  "fee_tx_size_1kb": "203",
+  "fee_historical_1kb": "2029",
+  "fee_contract_events_1kb": "2500",
   "persistent_rent_rate_denominator": "1215",
   "temp_rent_rate_denominator": "2430",
   "live_soroban_state_size_window": [
-    "1791918487",
-    "1793826946",
-    "1795143778",
-    "1795848678",
-    "1796250342",
-    "1796750670",
-    "1797282710",
-    "1798067158",
-    "1799530546",
-    "1800765926",
-    "1801742994",
-    "1801809182",
-    "1802354686",
-    "1802953222",
-    "1803505382",
-    "1804612190",
-    "1805964962",
-    "1806802962",
-    "1807050286",
-    "1807557442",
-    "1808206206",
-    "1808339890",
-    "1809096570",
-    "1810874282",
-    "1812036274",
-    "1813005254",
-    "1814041810",
-    "1815169126",
-    "1816146598",
-    "1817468022"
+    "1518456126",
+    "1519020298",
+    "1518920062",
+    "1519490746",
+    "1519922474",
+    "1519921542",
+    "1520127610",
+    "1520406486",
+    "1520850642",
+    "1521094242",
+    "1521409346",
+    "1521648814",
+    "1521884722",
+    "1522225534",
+    "1522533494",
+    "1522674154",
+    "1523191858",
+    "1523519458",
+    "1523443066",
+    "1523590394",
+    "1523932998",
+    "1524395678",
+    "1524710242",
+    "1525015758",
+    "1525281446",
+    "1525526550",
+    "1525898002",
+    "1526236090",
+    "1526445598",
+    "1526753866"
   ],
   "state_target_size_bytes": "3000000000",
   "rent_fee_1kb_state_size_low": "-17000",
@@ -137,58 +137,58 @@ export const TESTNET_LIMITS: NetworkLimits = {
   "contract_data_entry_size_bytes": 65536,
   "contract_max_size_bytes": 131072,
   "ledger_max_instructions": 580000000,
-  "ledger_max_disk_read_entries": 1000,
+  "ledger_max_disk_read_entries": 2000,
   "ledger_max_disk_read_bytes": 400000,
-  "ledger_max_write_ledger_entries": 1000,
-  "ledger_max_write_bytes": 286720,
-  "ledger_max_txs_size_bytes": 266240,
-  "ledger_max_dependent_tx_clusters": 2,
+  "ledger_max_write_ledger_entries": 2000,
+  "ledger_max_write_bytes": 297000,
+  "ledger_max_txs_size_bytes": 864000,
+  "ledger_max_dependent_tx_clusters": 3,
   "max_entry_ttl": 3110400,
   "min_temporary_ttl": 720,
   "min_persistent_ttl": 120960,
-  "fee_rate_per_instructions_increment": 7,
-  "fee_read_ledger_entry": "1563",
-  "fee_write_ledger_entry": "2500",
-  "fee_read_1kb": "447",
-  "fee_write_1kb": "875",
-  "fee_tx_size_1kb": "406",
-  "fee_historical_1kb": "4059",
-  "fee_contract_events_1kb": "5000",
+  "fee_rate_per_instructions_increment": 3,
+  "fee_read_ledger_entry": "781",
+  "fee_write_ledger_entry": "1250",
+  "fee_read_1kb": "223",
+  "fee_write_1kb": "437",
+  "fee_tx_size_1kb": "203",
+  "fee_historical_1kb": "2029",
+  "fee_contract_events_1kb": "2500",
   "persistent_rent_rate_denominator": "1215",
   "temp_rent_rate_denominator": "2430",
   "live_soroban_state_size_window": [
-    "2600171610",
-    "2601226760",
-    "2602449395",
-    "2602541461",
-    "2602735854",
-    "2604841071",
-    "2604789475",
-    "2604764307",
-    "2605185048",
-    "2605221748",
-    "2605290244",
-    "2605368628",
-    "2604546636",
-    "2604275540",
-    "2604816372",
-    "2604334463",
-    "2590614313",
-    "2590675993",
-    "2592795056",
-    "2592944740",
-    "2593009952",
-    "2593332657",
-    "2593387305",
-    "2593654220",
-    "2593498094",
-    "2593228037",
-    "2593983104",
-    "2594042156",
-    "2594100404",
-    "2594367379"
+    "4673830272",
+    "4673855060",
+    "4677381564",
+    "4677432576",
+    "4677647348",
+    "4677706748",
+    "4677746188",
+    "4677767396",
+    "4679620071",
+    "4679722515",
+    "4679834863",
+    "4679933623",
+    "4680030583",
+    "4679324833",
+    "4679373993",
+    "4677898944",
+    "4677057023",
+    "4677082363",
+    "4677285956",
+    "4676857392",
+    "4676664500",
+    "4676693524",
+    "4676709304",
+    "4676740732",
+    "4676964615",
+    "4676515435",
+    "4676891545",
+    "4675533454",
+    "4671499209",
+    "4671517509"
   ],
-  "state_target_size_bytes": "4000000000",
+  "state_target_size_bytes": "7000000000",
   "rent_fee_1kb_state_size_low": "-17000",
   "rent_fee_1kb_state_size_high": "10000",
   "state_size_rent_fee_growth_factor": 5000
@@ -227,36 +227,36 @@ export const FUTURENET_LIMITS: NetworkLimits = {
   "persistent_rent_rate_denominator": "1215",
   "temp_rent_rate_denominator": "2430",
   "live_soroban_state_size_window": [
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8786722",
-    "8783242",
-    "8783242"
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736",
+    "13431736"
   ],
   "state_target_size_bytes": "4000000000",
   "rent_fee_1kb_state_size_low": "-17000",
@@ -279,23 +279,23 @@ export const MAINNET_LIMITS_JSON: NetworkLimitsJson = {
       "contract_compute_v0": {
         "ledger_max_instructions": "580000000",
         "tx_max_instructions": "400000000",
-        "fee_rate_per_instructions_increment": "7",
+        "fee_rate_per_instructions_increment": "3",
         "tx_memory_limit": 41943040
       }
     },
     {
       "contract_ledger_cost_v0": {
-        "ledger_max_disk_read_entries": 1000,
+        "ledger_max_disk_read_entries": 2000,
         "ledger_max_disk_read_bytes": 400000,
-        "ledger_max_write_ledger_entries": 1000,
-        "ledger_max_write_bytes": 286720,
+        "ledger_max_write_ledger_entries": 2000,
+        "ledger_max_write_bytes": 297000,
         "tx_max_disk_read_entries": 200,
         "tx_max_disk_read_bytes": 200000,
         "tx_max_write_ledger_entries": 200,
         "tx_max_write_bytes": 132096,
-        "fee_disk_read_ledger_entry": "1563",
-        "fee_write_ledger_entry": "2500",
-        "fee_disk_read1_kb": "447",
+        "fee_disk_read_ledger_entry": "781",
+        "fee_write_ledger_entry": "1250",
+        "fee_disk_read1_kb": "223",
         "soroban_state_target_size_bytes": "3000000000",
         "rent_fee1_kb_soroban_state_size_low": "-17000",
         "rent_fee1_kb_soroban_state_size_high": "10000",
@@ -304,20 +304,20 @@ export const MAINNET_LIMITS_JSON: NetworkLimitsJson = {
     },
     {
       "contract_historical_data_v0": {
-        "fee_historical1_kb": "4059"
+        "fee_historical1_kb": "2029"
       }
     },
     {
       "contract_events_v0": {
         "tx_max_contract_events_size_bytes": 16384,
-        "fee_contract_events1_kb": "5000"
+        "fee_contract_events1_kb": "2500"
       }
     },
     {
       "contract_bandwidth_v0": {
-        "ledger_max_txs_size_bytes": 266240,
+        "ledger_max_txs_size_bytes": 864000,
         "tx_max_size_bytes": 132096,
-        "fee_tx_size1_kb": "406"
+        "fee_tx_size1_kb": "203"
       }
     },
     {
@@ -369,13 +369,13 @@ export const MAINNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "40256",
+          "const_term": "44420",
           "linear_term": "0"
         },
         {
           "ext": "v0",
-          "const_term": "377551",
-          "linear_term": "4059"
+          "const_term": "706689",
+          "linear_term": "4229"
         },
         {
           "ext": "v0",
@@ -414,7 +414,7 @@ export const MAINNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "4716",
+          "const_term": "5771",
           "linear_term": "0"
         },
         {
@@ -424,12 +424,12 @@ export const MAINNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "4256",
+          "const_term": "10293",
           "linear_term": "0"
         },
         {
           "ext": "v0",
-          "const_term": "884",
+          "const_term": "2100",
           "linear_term": "0"
         },
         {
@@ -594,7 +594,7 @@ export const MAINNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "2458985",
+          "const_term": "3110211",
           "linear_term": "0"
         },
         {
@@ -619,7 +619,7 @@ export const MAINNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "7873219",
+          "const_term": "9836091",
           "linear_term": "0"
         },
         {
@@ -699,7 +699,7 @@ export const MAINNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "61",
+          "const_term": "34237",
           "linear_term": "0"
         },
         {
@@ -709,7 +709,7 @@ export const MAINNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "1150435",
+          "const_term": "1467330",
           "linear_term": "0"
         },
         {
@@ -1215,13 +1215,13 @@ export const MAINNET_LIMITS_JSON: NetworkLimitsJson = {
     },
     {
       "contract_parallel_compute_v0": {
-        "ledger_max_dependent_tx_clusters": 2
+        "ledger_max_dependent_tx_clusters": 3
       }
     },
     {
       "contract_ledger_cost_ext_v0": {
         "tx_max_footprint_entries": 400,
-        "fee_write1_kb": "875"
+        "fee_write1_kb": "437"
       }
     },
     {
@@ -1245,24 +1245,24 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
       "contract_compute_v0": {
         "ledger_max_instructions": "580000000",
         "tx_max_instructions": "400000000",
-        "fee_rate_per_instructions_increment": "7",
+        "fee_rate_per_instructions_increment": "3",
         "tx_memory_limit": 41943040
       }
     },
     {
       "contract_ledger_cost_v0": {
-        "ledger_max_disk_read_entries": 1000,
+        "ledger_max_disk_read_entries": 2000,
         "ledger_max_disk_read_bytes": 400000,
-        "ledger_max_write_ledger_entries": 1000,
-        "ledger_max_write_bytes": 286720,
+        "ledger_max_write_ledger_entries": 2000,
+        "ledger_max_write_bytes": 297000,
         "tx_max_disk_read_entries": 200,
         "tx_max_disk_read_bytes": 200000,
         "tx_max_write_ledger_entries": 200,
         "tx_max_write_bytes": 132096,
-        "fee_disk_read_ledger_entry": "1563",
-        "fee_write_ledger_entry": "2500",
-        "fee_disk_read1_kb": "447",
-        "soroban_state_target_size_bytes": "4000000000",
+        "fee_disk_read_ledger_entry": "781",
+        "fee_write_ledger_entry": "1250",
+        "fee_disk_read1_kb": "223",
+        "soroban_state_target_size_bytes": "7000000000",
         "rent_fee1_kb_soroban_state_size_low": "-17000",
         "rent_fee1_kb_soroban_state_size_high": "10000",
         "soroban_state_rent_fee_growth_factor": 5000
@@ -1270,20 +1270,20 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
     },
     {
       "contract_historical_data_v0": {
-        "fee_historical1_kb": "4059"
+        "fee_historical1_kb": "2029"
       }
     },
     {
       "contract_events_v0": {
         "tx_max_contract_events_size_bytes": 16384,
-        "fee_contract_events1_kb": "5000"
+        "fee_contract_events1_kb": "2500"
       }
     },
     {
       "contract_bandwidth_v0": {
-        "ledger_max_txs_size_bytes": 266240,
+        "ledger_max_txs_size_bytes": 864000,
         "tx_max_size_bytes": 132096,
-        "fee_tx_size1_kb": "406"
+        "fee_tx_size1_kb": "203"
       }
     },
     {
@@ -1335,13 +1335,13 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "40256",
+          "const_term": "44420",
           "linear_term": "0"
         },
         {
           "ext": "v0",
-          "const_term": "377551",
-          "linear_term": "4059"
+          "const_term": "706689",
+          "linear_term": "4229"
         },
         {
           "ext": "v0",
@@ -1380,7 +1380,7 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "4716",
+          "const_term": "5771",
           "linear_term": "0"
         },
         {
@@ -1390,12 +1390,12 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "4256",
+          "const_term": "10293",
           "linear_term": "0"
         },
         {
           "ext": "v0",
-          "const_term": "884",
+          "const_term": "2100",
           "linear_term": "0"
         },
         {
@@ -1560,7 +1560,7 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "2458985",
+          "const_term": "3110211",
           "linear_term": "0"
         },
         {
@@ -1585,7 +1585,7 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "7873219",
+          "const_term": "9836091",
           "linear_term": "0"
         },
         {
@@ -1665,7 +1665,7 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "61",
+          "const_term": "34237",
           "linear_term": "0"
         },
         {
@@ -1675,7 +1675,7 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
         },
         {
           "ext": "v0",
-          "const_term": "1150435",
+          "const_term": "1467330",
           "linear_term": "0"
         },
         {
@@ -1717,6 +1717,51 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
           "ext": "v0",
           "const_term": "1185193",
           "linear_term": "41568084"
+        },
+        {
+          "ext": "v0",
+          "const_term": "849110",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "1505271",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "2625760",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "37888",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "47691",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "66346",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "685165",
+          "linear_term": "6103"
+        },
+        {
+          "ext": "v0",
+          "const_term": "983619",
+          "linear_term": "6103"
+        },
+        {
+          "ext": "v0",
+          "const_term": "1437210",
+          "linear_term": "6102"
         }
       ]
     },
@@ -2151,6 +2196,51 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
           "ext": "v0",
           "const_term": "73061",
           "linear_term": "229779"
+        },
+        {
+          "ext": "v0",
+          "const_term": "24656",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "43088",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "73808",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "4104",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "5128",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "7176",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "0",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "0",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "0",
+          "linear_term": "0"
         }
       ]
     },
@@ -2181,13 +2271,13 @@ export const TESTNET_LIMITS_JSON: NetworkLimitsJson = {
     },
     {
       "contract_parallel_compute_v0": {
-        "ledger_max_dependent_tx_clusters": 2
+        "ledger_max_dependent_tx_clusters": 3
       }
     },
     {
       "contract_ledger_cost_ext_v0": {
         "tx_max_footprint_entries": 400,
-        "fee_write1_kb": "875"
+        "fee_write1_kb": "437"
       }
     },
     {
@@ -2683,6 +2773,51 @@ export const FUTURENET_LIMITS_JSON: NetworkLimitsJson = {
           "ext": "v0",
           "const_term": "1185193",
           "linear_term": "41568084"
+        },
+        {
+          "ext": "v0",
+          "const_term": "849110",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "1505271",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "2625760",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "37888",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "47691",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "66346",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "685165",
+          "linear_term": "6103"
+        },
+        {
+          "ext": "v0",
+          "const_term": "983619",
+          "linear_term": "6103"
+        },
+        {
+          "ext": "v0",
+          "const_term": "1437210",
+          "linear_term": "6102"
         }
       ]
     },
@@ -3117,6 +3252,51 @@ export const FUTURENET_LIMITS_JSON: NetworkLimitsJson = {
           "ext": "v0",
           "const_term": "73061",
           "linear_term": "229779"
+        },
+        {
+          "ext": "v0",
+          "const_term": "24656",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "43088",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "73808",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "4104",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "5128",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "7176",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "0",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "0",
+          "linear_term": "0"
+        },
+        {
+          "ext": "v0",
+          "const_term": "0",
+          "linear_term": "0"
         }
       ]
     },

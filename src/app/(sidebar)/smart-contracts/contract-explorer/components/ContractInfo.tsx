@@ -35,7 +35,7 @@ import {
   ContractSectionName,
   EmptyObj,
   Network,
-  WasmData,
+  BuildAttestation,
 } from "@/types/types";
 
 import { ContractSpecMeta } from "./ContractSpecMeta";
@@ -49,8 +49,11 @@ export const ContractInfo = ({
   infoData,
   contractId,
   backendStatus,
-  wasmData,
+  buildVerification,
   wasmHash,
+  wasmBinary,
+  isWasmBinaryLoading,
+  wasmBinaryError,
   network,
   isLoading,
   isSacType,
@@ -58,8 +61,11 @@ export const ContractInfo = ({
   infoData: ContractInfoApiResponse | null | undefined;
   contractId: string;
   backendStatus: "healthy" | "unhealthy";
-  wasmData: WasmData | null | undefined;
+  buildVerification: BuildAttestation | null | undefined;
   wasmHash: string | null | undefined;
+  wasmBinary: Uint8Array | null | undefined;
+  isWasmBinaryLoading: boolean;
+  wasmBinaryError: Error | null;
   network: Network | EmptyObj;
   isLoading: boolean;
   isSacType?: boolean;
@@ -85,12 +91,12 @@ export const ContractInfo = ({
   const getRepoData = () => ({
     sourceRepo: isSacType
       ? STELLAR_ASSET_CONTRACT.sourceRepo
-      : wasmData?.sourceRepo ||
+      : buildVerification?.sourceRepo ||
         infoData?.validation?.repository?.replace("https://github.com/", "") ||
         "",
     sourceCommit: isSacType
       ? STELLAR_ASSET_CONTRACT.sourceTag
-      : wasmData?.build.commit || infoData?.validation?.commit || "",
+      : buildVerification?.build.commit || infoData?.validation?.commit || "",
   });
 
   const { sourceRepo, sourceCommit } = getRepoData();
@@ -293,7 +299,9 @@ export const ContractInfo = ({
       sectionsToShow={sectionsToShow}
       wasmHash={wasmHash || ""}
       rpcUrl={network.rpcUrl}
-      isActive={activeTab === "contract-contract-spec"}
+      wasmBinary={wasmBinary}
+      isWasmBinaryLoading={isWasmBinaryLoading}
+      wasmBinaryError={wasmBinaryError}
       isSourceStellarExpert={false}
       isSacType={isSacType}
     />
@@ -313,7 +321,7 @@ export const ContractInfo = ({
     );
   };
 
-  const isSourceFromAttestation = !isSacType && wasmData && sourceRepo;
+  const isSourceFromAttestation = !isSacType && buildVerification && sourceRepo;
 
   return (
     <Box gap="lg">
@@ -343,7 +351,7 @@ export const ContractInfo = ({
                 status={
                   isSacType
                     ? "built_in"
-                    : wasmData
+                    : buildVerification
                       ? "verified_build"
                       : "unverified_build"
                 }
@@ -355,7 +363,7 @@ export const ContractInfo = ({
             )}
           </Box>
 
-          {!isSacType && wasmData && (
+          {!isSacType && buildVerification && (
             <Notification variant="primary" title="Verified Build">
               <VerifiedBuildMessage />
             </Notification>
@@ -388,10 +396,21 @@ export const ContractInfo = ({
             tab2={{
               id: "contract-contract-meta",
               label: "Contract & Env meta",
-              content: isDataLoaded ? (
-                renderContractSpecMeta(["contractmetav0", "contractenvmetav0"])
-              ) : (
+              content: !isDataLoaded ? (
                 <NoContractLoadedView />
+              ) : isSacType ? (
+                // Contract and env meta are Wasm custom sections, and the SAC
+                // is built into the protocol, so there is no Wasm to read
+                <NoDataMessage title="No Wasm for this contract">
+                  Stellar Asset Contracts are built into the Stellar protocol
+                  and don’t have a Wasm file, so there’s no contract or
+                  environment meta to show.{" "}
+                  <Link href="https://developers.stellar.org/docs/tokens/stellar-asset-contract">
+                    Learn more about the Stellar Asset Contract
+                  </Link>
+                </NoDataMessage>
+              ) : (
+                renderContractSpecMeta(["contractmetav0", "contractenvmetav0"])
               ),
               isDisabled: !isDataLoaded,
             }}
@@ -406,7 +425,7 @@ export const ContractInfo = ({
                   isSourceStellarExpert={
                     // isSacType can also be undefined, so we need to make sure
                     // the value was set here
-                    isSacType === false && !wasmData?.sourceRepo
+                    isSacType === false && !buildVerification?.sourceRepo
                   }
                 />
               ),
@@ -423,7 +442,7 @@ export const ContractInfo = ({
               label: "Build info",
               content: (
                 <BuildInfo
-                  wasmData={wasmData}
+                  buildVerification={buildVerification}
                   isActive={activeTab === "contract-build-info"}
                 />
               ),

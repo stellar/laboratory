@@ -1,7 +1,7 @@
-import { stringify, parse } from "zustand-querystring";
+import { stringify } from "zustand-querystring";
 import { Routes } from "@/constants/routes";
+import { getQueryStringState } from "@/helpers/getQueryStringState";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
-import { Store } from "@/store/createStore";
 import { AnyObject } from "@/types/types";
 
 export const buildEndpointHref = (
@@ -12,8 +12,7 @@ export const buildEndpointHref = (
     return "";
   }
 
-  const trimmedSearch = window.location.search.substring(3);
-  const parsedParams = parse(trimmedSearch) as Store;
+  const parsedParams = getQueryStringState(window.location.search) || {};
 
   const buildParams = Object.entries(parsedParams).reduce((res, cur) => {
     const [key, value] = cur;

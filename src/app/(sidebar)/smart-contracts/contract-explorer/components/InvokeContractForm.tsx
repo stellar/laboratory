@@ -48,7 +48,7 @@ import { useSubmitRpcTx } from "@/query/useSubmitRpcTx";
 import { isEmptyObject } from "@/helpers/isEmptyObject";
 import { dereferenceSchema } from "@/helpers/dereferenceSchema";
 import { getNetworkHeaders } from "@/helpers/getNetworkHeaders";
-import { getTxnToSimulate } from "@/helpers/sorobanUtils";
+import { getTxnToSimulate, isEmptyArgValue } from "@/helpers/sorobanUtils";
 
 import { SorobanInvokeValue, XdrFormatType, AnyObject } from "@/types/types";
 
@@ -93,7 +93,6 @@ export const InvokeContractForm = ({
     args: {},
   });
   const [formError, setFormError] = useState<AnyObject>({});
-  const [isGetFunction, setIsGetFunction] = useState(false);
 
   const [jsonResponse, setJsonResponse] =
     useState<SimulatedResponseType | null>(null);
@@ -398,6 +397,8 @@ export const InvokeContractForm = ({
         sorobanOperation,
         network.passphrase,
         dereferencedSchema?.argOrder || [],
+        dereferencedSchema?.required || [],
+        dereferencedSchema?.properties || {},
       );
 
       if (xdr) {
@@ -533,14 +534,6 @@ export const InvokeContractForm = ({
     setJsonResponse(null);
     setBase64Response(null);
   };
-
-  useEffect(() => {
-    if (dereferencedSchema && !dereferencedSchema?.required.length) {
-      setIsGetFunction(true);
-    } else {
-      setIsGetFunction(false);
-    }
-  }, [dereferencedSchema]);
 
   const renderTitle = (name: string, description?: string) => (
     <>
@@ -712,13 +705,13 @@ export const InvokeContractForm = ({
     simulateTxData?.result?.transactionDataJson;
 
   const isSimulationDisabled = () => {
-    const currentKey = Object.keys(formValue.args)[0];
-    const isEmptyArgs =
-      isEmptyObject(formValue.args) || formValue.args[currentKey]?.value === "";
+    // Optional (Option<T>) args are not in the schema's required list and can
+    // be left empty; only missing required args block simulation.
+    const hasMissingRequiredArgs = (dereferencedSchema?.required ?? []).some(
+      (field) => isEmptyArgValue(formValue.args[field]),
+    );
 
-    const disabled = !isGetFunction && isEmptyArgs;
-
-    return !hasNoFormErrors || disabled;
+    return !dereferencedSchema || !hasNoFormErrors || hasMissingRequiredArgs;
   };
 
   const isAnotherSigningMethod = signingMethod === "another";

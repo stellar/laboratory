@@ -254,26 +254,15 @@ pattern.
 
 **Backward compatibility with old URLs:**
 
-Existing URLs with transaction state in query params (e.g.,
-`?transaction.build.params.source_account=G...&transaction.build.classic.operations=...`)
-will continue to work through a one-time migration handled at the **app level**
-(e.g., in `StoreProvider` or root layout), so it catches any old bookmarked or
-shared URL regardless of which route the user lands on:
-
-1. On app initialization, check if the URL contains legacy `transaction.build.*`
-   or `transaction.sign.*` query params
-2. If found, parse them and write the values into the `TransactionFlowStore`
-   (sessionStorage)
-3. Redirect to the clean path (`/transaction/build` or `/transaction/import`)
-   with no query params (replace state, no history entry)
-4. The flow store now holds the migrated state; the user continues in the new
-   single-page flow
-
-This is a single centralized handler — individual pages do not need to know
-about legacy URL formats.
-
-This ensures bookmarked or shared URLs from before the migration still load
-correctly.
+`useLegacyUrlMigration` was deprecated in PR
+[#2218](https://github.com/stellar/laboratory/pull/2218). The new transaction
+flow does not migrate or restore transaction state from legacy query parameters
+such as
+`?transaction.build.params.source_account=G...&transaction.build.classic.operations=...`.
+Old bookmarks and shared links containing build parameters or operations will
+not repopulate the flow. Network settings remain in the app-wide querystring.
+Users must rebuild the transaction or import an available XDR; restoring legacy
+parameter-based URLs would require a separate migration feature.
 
 ### Save
 

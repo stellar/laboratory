@@ -8,14 +8,24 @@ type ContractType = Extract<
   "contractExecutableWasm" | "contractExecutableStellarAsset"
 >;
 
+/**
+ * Fetches a contract's instance ledger entry from RPC and returns its type
+ * (Wasm or SAC) and Wasm hash.
+ *
+ * @param enabled - Fetch automatically when the key changes (and serve cached
+ * data on revisit). Defaults to `false`, for callers that fetch with
+ * `refetch()`.
+ */
 export const useGetContractDataFromRpcById = ({
   contractId,
   rpcUrl,
   headers = {},
+  enabled = false,
 }: {
   contractId: string;
   rpcUrl: string;
   headers?: NetworkHeaders;
+  enabled?: boolean;
 }) => {
   const query = useQuery({
     queryKey: ["useGetContractDataFromRpcById", contractId, rpcUrl, headers],
@@ -73,7 +83,12 @@ export const useGetContractDataFromRpcById = ({
         throw `Something went wrong getting contract data by contract ID. ${e.message || e}`;
       }
     },
-    enabled: false,
+    enabled,
+    // The instance only changes when the contract is upgraded, so serve cached
+    // data for a few minutes; it is still refetched in the background after
+    // that, and the explorer's "Load contract" button forces a refetch.
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
   });
 
   return query;

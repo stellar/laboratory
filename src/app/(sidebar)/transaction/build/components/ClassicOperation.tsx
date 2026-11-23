@@ -11,7 +11,6 @@ import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 import { arrayItem } from "@/helpers/arrayItem";
 import { getClaimableBalanceIdFromXdr } from "@/helpers/getClaimableBalanceIdFromXdr";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
-import { shareableUrl } from "@/helpers/shareableUrl";
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
 
 import { useStore } from "@/store/useStore";
@@ -506,7 +505,6 @@ export const ClassicOperation = ({
         itemProps={{
           xdr: txnXdr,
           page: "build",
-          shareableUrl: shareableUrl("transactions-build"),
           params: build.params,
           operations: build.classic.operations,
         }}

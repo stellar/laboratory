@@ -24,6 +24,7 @@ export const renderOneOf = ({
   onChange,
   formError,
   setFormError,
+  isOptional,
 }: {
   name: string;
   schema: JSONSchema7;
@@ -33,6 +34,7 @@ export const renderOneOf = ({
   onChange: (value: SorobanInvokeValue) => void;
   formError: AnyObject;
   setFormError: (error: AnyObject) => void;
+  isOptional?: boolean;
 }) => {
   if (!schema?.oneOf) {
     return null;
@@ -57,6 +59,16 @@ export const renderOneOf = ({
     // When path is single level, get tag directly from keyName
     tagName = parsedSorobanOperation.args?.[keyName]?.tag;
   }
+
+  // Read the selection back from the store so the dropdown always shows the
+  // variant that will be encoded. Unions store `tag`; top-level integer enums
+  // store `enum`.
+  const storedValue = get(parsedSorobanOperation.args, path.join("."));
+  const selectedValue = (
+    storedValue?.tag ??
+    storedValue?.enum ??
+    ""
+  ).toString();
 
   const selectedSchema = schema.oneOf.find(
     (oneOf) => jsonSchema.isSchemaObject(oneOf) && oneOf?.title === tagName,
@@ -113,8 +125,10 @@ export const renderOneOf = ({
     <Box gap="md" key={`${path.join(".")}`}>
       <Select
         id="json-schema-form-renderer-one-of"
+        value={selectedValue}
         fieldSize="md"
         label={name}
+        labelSuffix={isOptional ? "optional" : undefined}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
           const isEnumType = schema?.oneOf?.find(
             (oneOf) =>

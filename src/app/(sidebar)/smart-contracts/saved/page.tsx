@@ -14,6 +14,7 @@ import { ShareUrlButton } from "@/components/ShareUrlButton";
 
 import { localStorageSavedContracts } from "@/helpers/localStorageSavedContracts";
 import { arrayItem } from "@/helpers/arrayItem";
+import { sortByNewest } from "@/helpers/sortByNewest";
 import { delayedAction } from "@/helpers/delayedAction";
 
 import { Routes } from "@/constants/routes";
@@ -34,7 +35,7 @@ export default function SavedSmartContracts() {
     const contracts = localStorageSavedContracts
       .get()
       .filter((s) => s.network.id === network.id);
-    setSavedContracts(contracts);
+    setSavedContracts(sortByNewest(contracts));
   }, [network.id]);
 
   useEffect(() => {

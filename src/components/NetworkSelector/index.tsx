@@ -127,8 +127,21 @@ export const NetworkSelector = () => {
         savedNetwork.horizonUrl === network.horizonUrl &&
         savedNetwork.rpcUrl === network.rpcUrl
       ) {
+        const presetLabel = getNetworkById(network.id)?.label;
+
+        if (presetLabel && presetLabel !== network.label) {
+          const correctedNetwork = {
+            ...(network as Network),
+            label: presetLabel,
+          };
+
+          selectNetwork(correctedNetwork);
+          updateNetwork(correctedNetwork);
+        }
+
         defaultNetwork = {
           ...defaultNetwork,
+          label: presetLabel || defaultNetwork.label,
           horizonHeaderName: savedNetwork.horizonHeaderName || "",
           rpcHeaderName: savedNetwork.rpcHeaderName || "",
         };

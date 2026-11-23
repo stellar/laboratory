@@ -16,7 +16,6 @@ import {
   MOCK_SAC_CONTRACT_TYPE_RESPONSE,
 } from "./mock/smartContracts";
 import { mockRpcRequest } from "./mock/helpers";
-import stellarAssetSpec from "./mock/stellarAssetSpec.json";
 import { shortenStellarAddress } from "@/helpers/shortenStellarAddress";
 
 // Helper functions
@@ -37,17 +36,6 @@ async function mockSacContract(page: Page) {
     rpcMethod: "getLedgerEntries",
     bodyJsonResponse: MOCK_SAC_CONTRACT_TYPE_RESPONSE,
   });
-
-  await page.route(
-    "https://raw.githubusercontent.com/stellar/stellar-asset-contract-spec/refs/heads/main/stellar-asset-spec.json",
-    async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify(stellarAssetSpec),
-      });
-    },
-  );
 
   await page.route(
     `${STELLAR_EXPERT_API}/testnet/contract/${MOCK_SAC_CONTRACT_ID}`,
@@ -272,15 +260,15 @@ test.describe("Address Selector", () => {
         },
       );
 
-      await pageContext.goto(`${baseURL}/transaction/build`);
-
       // Seed the flow store with an invoke_contract_function operation so the
-      // build step renders the Contract ID picker.
-      await pageContext.evaluate((stateJson) => {
+      // build step renders the Contract ID picker. Seed before any app script
+      // runs: seeding after page load races with mount effects that write the
+      // default flow state back to sessionStorage.
+      await pageContext.addInitScript((stateJson) => {
         sessionStorage.setItem("stellar_lab_tx_flow_build", stateJson);
       }, JSON.stringify(BUILD_STORE_STATE_WITH_INVOKE_OP));
 
-      await pageContext.reload();
+      await pageContext.goto(`${baseURL}/transaction/build`);
     });
 
     test("'Get contract ID' dropdown offers only saved contracts", async () => {
@@ -322,13 +310,11 @@ test.describe("Address Selector", () => {
       });
       pageContext = await browserContext.newPage();
 
-      await pageContext.goto(`${baseURL}/transaction/build`);
-
-      await pageContext.evaluate((stateJson) => {
+      await pageContext.addInitScript((stateJson) => {
         sessionStorage.setItem("stellar_lab_tx_flow_build", stateJson);
       }, JSON.stringify(BUILD_STORE_STATE_WITH_INVOKE_OP));
 
-      await pageContext.reload();
+      await pageContext.goto(`${baseURL}/transaction/build`);
     });
 
     test("hides the selector instead of falling back to saved keypairs", async () => {

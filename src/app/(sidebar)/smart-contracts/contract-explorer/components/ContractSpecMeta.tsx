@@ -4,22 +4,21 @@ import { useEffect, useState } from "react";
 import { Button, Icon } from "@stellar/design-system";
 import { parse, stringify } from "lossless-json";
 import { parseContractMetadata } from "@stellar-expert/contract-wasm-interface-parser";
+import { Buffer } from "buffer";
 
 import { CodeEditor, SupportedLanguage } from "@/components/CodeEditor";
 import { Box } from "@/components/layout/Box";
 import { WithInfoText } from "@/components/WithInfoText";
 import { PoweredByStellarExpert } from "@/components/PoweredByStellarExpert";
 
-import { useWasmBinaryFromRpc } from "@/query/useWasmBinaryFromRpc";
-import { useGitHubFile } from "@/query/useGitHubFile";
-
 import * as StellarXdr from "@/helpers/StellarXdr";
 import { downloadFile } from "@/helpers/downloadFile";
 import { renderContractSpecViewStatus } from "@/helpers/renderContractSpecViewStatus";
 import { getWasmContractData } from "@/helpers/getWasmContractData";
 import { formatContractInterface } from "@/helpers/formatContractInterface";
+import { joinXdrStream } from "@/helpers/xdrStream";
 
-import { STELLAR_ASSET_CONTRACT } from "@/constants/stellarAssetContractData";
+import { STELLAR_ASSET_CONTRACT_SPEC } from "@/constants/stellarAssetContractSpec";
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 
 import {
@@ -32,14 +31,19 @@ export const ContractSpecMeta = ({
   sectionsToShow,
   rpcUrl,
   wasmHash,
-  isActive,
+  wasmBinary,
+  isWasmBinaryLoading,
+  wasmBinaryError,
   isSourceStellarExpert,
   isSacType,
 }: {
   sectionsToShow: ContractSectionName[];
   rpcUrl: string;
   wasmHash: string;
-  isActive: boolean;
+  // Downloaded once by the explorer page and passed down
+  wasmBinary: Uint8Array | null | undefined;
+  isWasmBinaryLoading: boolean;
+  wasmBinaryError: Error | null;
   isSourceStellarExpert: boolean;
   isSacType?: boolean;
 }) => {
@@ -58,29 +62,6 @@ export const ContractSpecMeta = ({
 
   const isXdrInit = useIsXdrInit();
 
-  const {
-    data: wasmBinary,
-    error: wasmBinaryError,
-    isLoading: isWasmBinaryLoading,
-    isFetching: isWasmBinaryFetching,
-  } = useWasmBinaryFromRpc({
-    wasmHash,
-    rpcUrl,
-    isActive,
-  });
-
-  const {
-    data: sacData,
-    error: sacDataError,
-    isFetching: isSacDataFetching,
-    isLoading: isSacDataLoading,
-  } = useGitHubFile({
-    repo: STELLAR_ASSET_CONTRACT.contractSpecRepo,
-    path: STELLAR_ASSET_CONTRACT.contractSpecPath,
-    file: `${STELLAR_ASSET_CONTRACT.contractSpecFileName}.json`,
-    isActive: Boolean(isActive && isSacType),
-  });
-
   useEffect(() => {
     const getContractData = async () => {
       if (wasmBinary) {
@@ -97,6 +78,8 @@ export const ContractSpecMeta = ({
       try {
         // The parser reads the Wasm with Buffer-only methods (readUint8), but
         // RPC returns a Uint8Array as of SDK v17 — pass a Buffer or it throws.
+        // Buffer is imported from buffer@6 explicitly: Turbopack's global
+        // Buffer polyfill is an older version without the lowercase aliases.
         const parsedContractMeta = parseContractMetadata(
           Buffer.from(wasmBinary),
         );
@@ -115,12 +98,8 @@ export const ContractSpecMeta = ({
     wasmHash,
     rpcUrl,
     isLoading:
-      isWasmBinaryLoading ||
-      isWasmBinaryFetching ||
-      isSacDataLoading ||
-      isSacDataFetching ||
-      (isSacType === false && !contractSections),
-    error: wasmBinaryError || sacDataError,
+      isWasmBinaryLoading || (isSacType === false && !contractSections),
+    error: wasmBinaryError,
     isSacType: Boolean(isSacType),
   });
 
@@ -128,23 +107,17 @@ export const ContractSpecMeta = ({
     return viewStatus;
   }
 
-  const formatSacData = (
-    dataString: string | null | undefined,
-    type: "json" | "xdr",
-  ) => {
-    if (!dataString) {
-      return "";
-    }
-
-    const jsonData = parse(dataString) as AnyObject[];
-
+  const formatSacData = (type: "json" | "xdr") => {
     if (type === "json") {
-      return `${jsonData.map((d) => stringify(d, null, 2)).join(",\n\n")}`;
+      return isXdrInit
+        ? STELLAR_ASSET_CONTRACT_SPEC.map((xdr) =>
+            stringify(parse(StellarXdr.decode("ScSpecEntry", xdr)), null, 2),
+          ).join(",\n\n")
+        : "";
     }
 
-    return isXdrInit
-      ? `${jsonData.map((d) => StellarXdr.encode("ScSpecEntry", stringify(d) || "")).join("\n\n")}`
-      : "";
+    // Show as a single base64 stream of all entries (same as stellar-cli)
+    return joinXdrStream(STELLAR_ASSET_CONTRACT_SPEC);
   };
 
   const formatInterface = (obj: AnyObject | null) => {
@@ -164,14 +137,14 @@ export const ContractSpecMeta = ({
     switch (selectedFormat[sectionName]) {
       case "json":
         return isSacType
-          ? formatSacData(sacData, "json")
+          ? formatSacData("json")
           : // Adding the first line as a comment with a section name. For example:
             // // contractspecv0
             `// ${sectionName} \n\n${contractSections?.[sectionName].json?.join(",\n\n")}`;
       case "xdr":
         return isSacType
-          ? formatSacData(sacData, "xdr")
-          : `// ${sectionName} \n\n${contractSections?.[sectionName].xdr?.join("\n\n")}`;
+          ? formatSacData("xdr")
+          : (contractSections?.[sectionName].xdr ?? "");
       case "interface":
         return isSacType
           ? // We can’t get interface for SAC because there is no Wasm file to parse
@@ -237,7 +210,7 @@ export const ContractSpecMeta = ({
                   });
                 }
               }}
-              isLoading={isWasmBinaryLoading || isWasmBinaryFetching}
+              isLoading={isWasmBinaryLoading}
             >
               Download Wasm
             </Button>

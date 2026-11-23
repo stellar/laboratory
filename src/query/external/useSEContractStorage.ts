@@ -53,7 +53,7 @@ export const useSEContractStorage = ({
         }
 
         const response = await fetch(
-          `${STELLAR_EXPERT_API}/${network}/contract-data/${contractId}?${searchParams.toString()}`,
+          `${STELLAR_EXPERT_API}/${network}/contract-state/${contractId}?${searchParams.toString()}`,
         );
 
         const responseJson = await response.json();
@@ -72,7 +72,10 @@ export const useSEContractStorage = ({
       };
 
       try {
-        // Fetch the last entries limited by CONTRACT_STORAGE_MAX_ENTRIES
+        // StellarExpert orders entries by key hash (`paging_token`), not by
+        // update time, and caps `limit` at 200. For contracts with more than
+        // CONTRACT_STORAGE_MAX_ENTRIES entries this returns a subset by key
+        // hash, which is then sorted by `updated` below.
         while (
           allRecords.length <
             Math.min(totalEntriesCount, CONTRACT_STORAGE_MAX_ENTRIES) &&

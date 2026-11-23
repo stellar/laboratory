@@ -72,7 +72,8 @@
     }
 
     // Address
-    &[data-type="address"] {
+    &[data-type="address"],
+    &[data-type="muxed_address"] {
       --ColorPill-color-text: var(--sds-clr-gray-10);
     }
   }

@@ -81,7 +81,7 @@ export default function ViewXdr() {
     trackingEvents: {
       success: TrackingEvent.XDR_TO_JSON_SUCCESS,
       successStream: TrackingEvent.XDR_TO_JSON_STREAM_SUCCESS,
-      error: TrackingEvent.XDR_FROM_JSON_ERROR,
+      error: TrackingEvent.XDR_TO_JSON_ERROR,
     },
   });
 
@@ -167,15 +167,13 @@ export default function ViewXdr() {
             <span className="PrettyJson__expandSize">{`${jsonArray.length} items`}</span>
           </div>
           {jsonArray.map((j, index) => (
-            <>
-              <PrettyJsonTransaction
-                // Using index here because we can't get something unique from the JSON
-                key={`pretty-json-${index}`}
-                json={j}
-                xdr={xdr}
-                isCodeWrapped={isCodeWrapped}
-              />
-            </>
+            <PrettyJsonTransaction
+              // Using index here because we can't get something unique from the JSON
+              key={`pretty-json-${index}`}
+              json={j}
+              xdr={xdr}
+              isCodeWrapped={isCodeWrapped}
+            />
           ))}
           <span className="PrettyJson__bracket">]</span>
         </div>

@@ -104,17 +104,17 @@ const txData = async ({
   // Input transaction hash
   const loadButton = page.getByRole("button", { name: "Load transaction" });
 
-  await expect(loadButton).toBeDisabled();
-  await page.getByLabel("Transaction hash").fill(mockResponse.result.txHash);
-
-  await expect(loadButton).toBeEnabled();
-
-  // Mock response
+  // Mock before filling the hash: a valid hash auto-fetches the tx
   await mockRpcRequest({
     page,
     rpcMethod: "getTransaction",
     bodyJsonResponse: mockResponse,
   });
+
+  await expect(loadButton).toBeDisabled();
+  await page.getByLabel("Transaction hash").fill(mockResponse.result.txHash);
+
+  await expect(loadButton).toBeEnabled();
 
   await loadButton.click();
 

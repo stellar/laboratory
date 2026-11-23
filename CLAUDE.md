@@ -1,21 +1,6 @@
 # Claude Code Instructions for Stellar Laboratory
 
-## Quick Reference
-
-```bash
-# Development
-pnpm dev                    # Start dev server (auto-fetches network limits)
-pnpm build                  # Production build
-pnpm lint                   # ESLint
-pnpm lint:ts                # TypeScript check
-pnpm test                   # Run all tests
-pnpm test:unit              # Jest unit tests
-pnpm test:e2e               # Playwright e2e tests
-
-# Common Workflows
-pnpm fetch-limits           # Manually fetch Stellar network limits
-git push --no-verify        # Skip pre-push hooks (network issues)
-```
+@AGENTS.md
 
 ## Repository Overview
 
@@ -23,24 +8,6 @@ Stellar Lab is an interactive toolkit for exploring the Stellar blockchain
 network. It helps developers experiment with building, signing, simulating, and
 submitting transactions, as well as making requests to both RPC and Horizon
 APIs. The `main` branch is deployed to https://lab.stellar.org/.
-
-## Tech Stack
-
-> See `package.json` for exact dependency versions.
-
-- **Framework**: Next.js 15 (React 19) with App Router
-- **Language**: TypeScript 5
-- **UI Framework**: Stellar Design System, Sass
-- **State Management**: Zustand (with querystring persistence via
-  zustand-querystring)
-- **API Data Fetching**: TanStack React Query v5
-- **Stellar SDK**: @stellar/stellar-sdk
-- **Hardware Wallets**: Ledger (@ledgerhq/hw-app-str), Trezor
-  (@trezor/connect-web)
-- **Testing**: Jest (unit tests), Playwright (e2e tests)
-- **Code Quality**: ESLint, Prettier, Husky pre-commit hooks
-- **Package Manager**: pnpm 10
-- **Deployment**: Docker, Next.js standalone output, Sentry error tracking
 
 ## Architecture Constraints
 
@@ -52,31 +19,13 @@ APIs. The `main` branch is deployed to https://lab.stellar.org/.
   Avoid using `useState` or `useSearchParams` for values that should persist
   across navigation — use the Zustand store instead. The store is initialized
   once from the URL in `StoreProvider`.
-- **CSP middleware**: `src/middleware.ts` generates a nonce-based Content
-  Security Policy on every request. When adding new external script/font/image
-  sources, update the CSP directives there.
+- **CSP proxy**: `src/proxy.ts` (Next.js 16 proxy, formerly middleware)
+  generates a nonce-based Content Security Policy on every request. When
+  adding new external script/font/image sources, update the CSP directives
+  there.
 - **No Horizon for new features**: Always use RPC endpoints
   (`src/query/useRpc*`, `src/query/useGetRpc*`). Horizon hooks exist for legacy
   features only.
-
-## Prerequisites
-
-> See `package.json` for exact dependency versions.
-
-- **Node.js**: >= 22.22.0 (specified in `.nvmrc` and `package.json`)
-- **pnpm**: >= 10.15.1 (managed via Corepack)
-
-## Development Setup
-
-```bash
-corepack enable
-pnpm install --frozen-lockfile
-pnpm dev
-```
-
-The `pnpm dev` command automatically runs `pnpm fetch-limits` (via `predev`
-script) to fetch Stellar network limits from RPC endpoints before starting the
-dev server.
 
 ## Common Issues and Solutions
 
@@ -86,11 +35,6 @@ dev server.
 restrictions blocking Stellar RPC endpoints. The repo includes a committed
 `src/constants/networkLimits.ts` with recent values; if it exists, skip
 fetching. If pre-push hooks fail due to network: `git push --no-verify`.
-
-### Next.js Lint Deprecation Warning
-
-`pnpm lint` shows deprecation warning for `next lint` in Next.js 16. Warning
-only, not blocking. May need ESLint CLI migration when upgrading to Next.js 16.
 
 ### Husky Hooks Failing
 
@@ -113,39 +57,7 @@ server, tests run against the old branch's code.
 3. Restart the dev server: `pnpm dev`
 4. Then run tests: `pnpm test:e2e`
 
-## Key Directories
-
-```
-src/
-├── app/               # Next.js App Router pages
-│   ├── (sidebar)/     # Route group: account, endpoints, smart-contracts,
-│   │                  #   transaction, xdr, network-limits, etc.
-│   └── layout.tsx     # Root layout with providers
-├── components/        # Reusable React components
-├── constants/         # Configuration and static data
-├── helpers/           # Utility functions (including xdr/, explorer/)
-├── hooks/             # Custom React hooks
-├── metrics/           # GA and Amplitude analytics tracking
-├── query/             # React Query hooks (useRpc*, useGetRpc*)
-├── store/             # Zustand state stores
-├── types/             # TypeScript type definitions
-├── validate/          # Validation logic (get*Error() convention)
-└── middleware.ts      # CSP middleware
-tests/
-├── e2e/               # Playwright e2e tests
-└── unit/              # Jest unit tests
-```
-
 ## Code Patterns and Conventions
-
-### Import Paths
-
-Use `@/` path alias for imports from `src/`:
-
-```typescript
-import { helper } from "@/helpers/utils";
-import { useStore } from "@/store/createStore";
-```
 
 ### Naming Conventions
 
@@ -167,6 +79,9 @@ import { useStore } from "@/store/createStore";
 ### Stellar-Specific Rules
 
 - Never edit `src/constants/networkLimits.ts` manually (auto-generated)
+- Never edit `src/constants/stellarAssetContractSpec.ts` manually. Regenerate it
+  with `pnpm fetch-sac-spec` (needs the stellar CLI) after a protocol or stellar
+  CLI release that changes the SAC interface
 - Store XDR as base64 strings; parse lazily at point of use
 - When updating `@stellar/stellar-sdk` or `@stellar/stellar-xdr-json`, also
   check whether `@stellar-expert/contract-wasm-interface-parser` needs to be
@@ -190,12 +105,6 @@ pnpm build  # Output: build/ directory (standalone format)
 
 Husky runs lint + tests on push; use `--no-verify` to skip.
 
-- **ESLint**: `.eslintrc.json` — extends `eslint:recommended`,
-  `@typescript-eslint/recommended`, `next/core-web-vitals`, `prettier`
-- **Prettier**: `.prettierrc.json` — 80 chars, 2 spaces, semicolons, double
-  quotes, trailing commas
-- **Known exception**: `@typescript-eslint/no-explicit-any` disabled
-
 ## Skills
 
 Detailed patterns are in on-demand skills (`.claude/skills/`). Use these for
@@ -204,7 +113,6 @@ deep context when working in specific areas:
 - `/zustand-store-patterns` — store selection, hydration, cross-store reads
 - `/figma-to-code` — translating Figma MCP output to project conventions
 - `/component-guide` — UI component catalog (SDS + local) and SCSS conventions
-- `/commit-progress` — commit logical units of work
 
 ## Task Completion Checklist
 

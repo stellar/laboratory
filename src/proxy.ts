@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
+  // Don't rewrite the query string here (e.g. to strip UTM tags): editing
+  // `searchParams` re-encodes the whole query, turning the store's `$=...;;`
+  // state into `%24=...`, which zustand-querystring can't read.
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
   const isLocalhost = Boolean(
@@ -15,16 +18,21 @@ export function middleware(request: NextRequest) {
   //   Reown modal that renders the WalletConnect QR code
   // frame-src verify.walletconnect.org is the iframe WalletConnect uses to
   //   attest the dapp's domain to the wallet
+  // frame-src prism-chat.neevai.io is the NeevAI chat ("Ask Stellar") iframe
+  // frame-src suite.trezor.io is the hidden bootstrap iframe Trezor Connect 10
+  //   uses to hand off to the Trezor Suite Web popup
+  // connect-src ws://127.0.0.1:21335 lets Trezor Connect reach a running
+  //   Trezor Suite Desktop over its local websocket
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: 'unsafe-inline' 'unsafe-eval';
     script-src-elem 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.googletagmanager.com/ https: 'unsafe-inline';
     style-src 'self' https: 'unsafe-inline';
     img-src 'self' https://stellar.creit.tech/wallet-icons/ https://www.googletagmanager.com/ https://storage.herewallet.app/ https://api.web3modal.org/ blob: data:;
-    connect-src 'self' http://localhost:* https: wss://relay.walletconnect.org;
+    connect-src 'self' http://localhost:* ws://127.0.0.1:21335 https: wss://relay.walletconnect.org;
     font-src 'self' https://fonts.gstatic.com/ https://fonts.reown.com/ https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/base/browser/ui/codicons/codicon/codicon.ttf;
     object-src 'none';
-    frame-src 'self' https://connect.trezor.io/ https://hot-labs.org/ https://www.youtube.com/ https://verify.walletconnect.org/;
+    frame-src 'self' https://suite.trezor.io/ https://hot-labs.org/ https://www.youtube.com/ https://verify.walletconnect.org/ https://prism-chat.neevai.io/;
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';

@@ -12,7 +12,6 @@ import { formComponentTemplateTxnOps } from "@/components/formComponentTemplateT
 import { SaveToLocalStorageModal } from "@/components/SaveToLocalStorageModal";
 
 import { localStorageSavedTransactions } from "@/helpers/localStorageSavedTransactions";
-import { shareableUrl } from "@/helpers/shareableUrl";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 
 import { TRANSACTION_OPERATIONS } from "@/constants/transactionOperations";
@@ -264,7 +263,6 @@ export const SorobanOperation = ({
         itemProps={{
           xdr: sorobanTxnXdr,
           page: "build",
-          shareableUrl: shareableUrl("transactions-build"),
           params: build.params,
           operations: [build.soroban.operation],
         }}
