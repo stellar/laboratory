@@ -36,6 +36,7 @@ import { openUrl } from "@/helpers/openUrl";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
 import { useCodeWrappedSetting } from "@/hooks/useCodeWrappedSetting";
+import { useDebouncedTrackEvent } from "@/hooks/useDebouncedTrackEvent";
 import { useStore } from "@/store/useStore";
 
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
@@ -78,12 +79,22 @@ export default function ViewXdr() {
     xdrType: xdr.type,
     xdrBlob: xdr.blob,
     isReady: isXdrInit,
-    trackingEvents: {
-      success: TrackingEvent.XDR_TO_JSON_SUCCESS,
-      successStream: TrackingEvent.XDR_TO_JSON_STREAM_SUCCESS,
-      error: TrackingEvent.XDR_TO_JSON_ERROR,
-    },
   });
+
+  // Track the decode result once the input settles, not on every render.
+  useDebouncedTrackEvent(
+    {
+      event: xdrJsonDecoded
+        ? {
+            success: TrackingEvent.XDR_TO_JSON_SUCCESS,
+            stream: TrackingEvent.XDR_TO_JSON_STREAM_SUCCESS,
+            error: TrackingEvent.XDR_TO_JSON_ERROR,
+          }[xdrJsonDecoded.outcome]
+        : null,
+      properties: { xdrType: xdr.type },
+    },
+    [xdr.blob, xdr.type, isXdrInit],
+  );
 
   const txnFromXdr = () => {
     try {
