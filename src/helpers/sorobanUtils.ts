@@ -479,6 +479,13 @@ const convertPrimitiveField = (field: any) => {
       typeHint: ["symbol"],
     };
   }
+  if (field.type === "bytes") {
+    const encoding = detectBytesEncoding(field.value);
+    return {
+      value: new Uint8Array(Buffer.from(field.value, encoding)),
+      typeHint: ["symbol", "bytes"],
+    };
+  }
   return {
     value: field.value,
     typeHint: ["symbol", getScValTypeHint(field.type)],
@@ -493,7 +500,7 @@ const convertObjectToMap = (
       const valueScVal = getScValFromArg(pair["1"], []);
       acc[pair["0"].value] = valueScVal;
     } else {
-      acc[pair["0"].value] = pair["1"].value === "true" ? true : false;
+      acc[pair["0"].value] = getScValFromPrimitive(pair["1"]);
     }
     return acc;
   }, {});
