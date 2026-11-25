@@ -18,6 +18,7 @@ import { PageCard } from "@/components/layout/PageCard";
 import { PageHeader } from "@/components/layout/PageHeader";
 
 import { useIsXdrInit } from "@/hooks/useIsXdrInit";
+import { useDebouncedTrackEvent } from "@/hooks/useDebouncedTrackEvent";
 import { useStore } from "@/store/useStore";
 import { trackEvent, TrackingEvent } from "@/metrics/tracking";
 
@@ -41,33 +42,42 @@ export default function ToXdr() {
       return {
         xdrString: "",
         error: "Invalid JSON",
+        outcome: "invalidJson" as const,
       };
     }
 
     try {
-      const xdrString = StellarXdr.encode(xdr.type, xdr.jsonString);
-
-      trackEvent(TrackingEvent.XDR_FROM_JSON_SUCCESS, {
-        xdrType: xdr.type,
-      });
-
       return {
-        xdrString: xdrString,
+        xdrString: StellarXdr.encode(xdr.type, xdr.jsonString),
         error: "",
+        outcome: "success" as const,
       };
     } catch (e) {
-      trackEvent(TrackingEvent.XDR_FROM_JSON_ERROR, {
-        xdrType: xdr.type,
-      });
-
       return {
         xdrString: "",
         error: `Unable to decode JSON as ${xdr.type}: ${e}`,
+        outcome: "error" as const,
       };
     }
   };
 
   const jsonXdrEncoded = jsonEncodeXdr();
+
+  // Track the encode result once the input settles, not on every render.
+  // Invalid JSON is not tracked, because encoding was not attempted.
+  useDebouncedTrackEvent(
+    {
+      event: jsonXdrEncoded
+        ? {
+            success: TrackingEvent.XDR_FROM_JSON_SUCCESS,
+            error: TrackingEvent.XDR_FROM_JSON_ERROR,
+            invalidJson: null,
+          }[jsonXdrEncoded.outcome]
+        : null,
+      properties: { xdrType: xdr.type },
+    },
+    [xdr.jsonString, xdr.type, isXdrInit],
+  );
 
   return (
     <Box gap="md">
