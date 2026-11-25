@@ -10,8 +10,8 @@ import { AnyObject } from "@/types/types";
  * decoding XDR). Re-renders that don't change `deps` send nothing, and typing
  * sends one event after the user pauses instead of one per keystroke.
  *
- * `event` and `properties` must be derived from `deps`; they are read from the
- * render in which `deps` last changed. Pass `null` as `event` to skip tracking.
+ * `event` and `properties` must only change when `deps` change
+ * Pass `null` as `event` to skip tracking.
  */
 export const useDebouncedTrackEvent = (
   {
