@@ -3,6 +3,21 @@ import { STELLAR_EXPERT_API } from "@/constants/settings";
 import { getStellarExpertNetwork } from "@/helpers/getStellarExpertNetwork";
 import { ContractListRecord, NetworkType } from "@/types/types";
 
+/** Records per page requested from the list API */
+export const SE_CONTRACTS_LIST_PAGE_SIZE = 20;
+
+const CONTRACT_ID_LENGTH = 56;
+
+/**
+ * The list API orders by contract ID and its cursor is a contract ID (the
+ * next page starts right after it), so a prefix search is a cursor that sits
+ * just before (ascending) or just after (descending) every ID with that prefix.
+ */
+export const getSEContractsPrefixCursor = (
+  prefix: string,
+  order: "asc" | "desc",
+) => (order === "asc" ? prefix : prefix.padEnd(CONTRACT_ID_LENGTH, "Z"));
+
 /**
  * StellarExpert API to get smart contracts list
  */
@@ -10,10 +25,12 @@ export const useSEContractsList = ({
   networkId,
   cursor,
   order,
+  enabled = true,
 }: {
   networkId: NetworkType;
   cursor?: string;
   order?: "asc" | "desc";
+  enabled?: boolean;
 }) => {
   const query = useQuery({
     queryKey: ["useSEContractsList", networkId, cursor, order],
@@ -30,7 +47,7 @@ export const useSEContractsList = ({
 
       const params = new URLSearchParams();
 
-      params.append("limit", "20");
+      params.append("limit", String(SE_CONTRACTS_LIST_PAGE_SIZE));
       params.append("order", order || "desc");
 
       if (cursor) {
@@ -61,7 +78,7 @@ export const useSEContractsList = ({
         throw `Something went wrong. ${e}`;
       }
     },
-    enabled: Boolean(networkId),
+    enabled: Boolean(networkId) && enabled,
     // Keep data for 60 seconds
     staleTime: 1000 * 60,
     // Keep previous data
