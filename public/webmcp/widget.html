@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Stellar Lab WebMCP relay</title>
+  </head>
+  <body>
+    <!--
+      Hidden bridge between Lab's document.modelContext tools and a local
+      @mcp-b/webmcp-local-relay process. Loaded by WebMcpBridge as a
+      same-origin iframe; src/proxy.ts gives this path its own CSP that only
+      allows a loopback WebSocket. Config arrives as query params.
+    -->
+    <script src="./widget.js"></script>
+  </body>
+</html>

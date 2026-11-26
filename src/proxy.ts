@@ -1,9 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 
+const WEBMCP_WIDGET_CSP = [
+  "default-src 'none'",
+  "script-src 'self'",
+  "connect-src ws://127.0.0.1:* ws://localhost:*",
+  "frame-ancestors 'self'",
+  "base-uri 'none'",
+  "form-action 'none'",
+].join("; ");
+
 export function proxy(request: NextRequest) {
   // Don't rewrite the query string here (e.g. to strip UTM tags): editing
   // `searchParams` re-encodes the whole query, turning the store's `$=...;;`
   // state into `%24=...`, which zustand-querystring can't read.
+
+  // The WebMCP relay widget (public/webmcp/) is a hidden same-origin iframe
+  // whose only job is to open a WebSocket to a relay on the user's own machine.
+  // It gets its own narrow policy so Lab's main CSP never has to allow
+  // loopback WebSockets.
+  if (request.nextUrl.pathname.includes("/webmcp/")) {
+    const response = NextResponse.next();
+    response.headers.set("Content-Security-Policy", WEBMCP_WIDGET_CSP);
+    return response;
+  }
+
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
   const isLocalhost = Boolean(
